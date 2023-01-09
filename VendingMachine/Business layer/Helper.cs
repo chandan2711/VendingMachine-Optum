@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using VendingMachine.BL.Interfaces;
 using VendingMachine.Common;
+using VendingMachine.Common.Constant;
+using VendingMachine.Common.Enum;
 
 namespace VendingMachine.BL
 {
@@ -18,15 +20,15 @@ namespace VendingMachine.BL
         public Helper()
         {
             // Adding Coins to DictionaryofCoins
-            dictionaryOfCoins.Add("1", 0.05);
-            dictionaryOfCoins.Add("2", 0.10);
-            dictionaryOfCoins.Add("3", 0.25);
+            dictionaryOfCoins.Add(CoinName.Quarters.ToString(), CoinValue.Quarters);
+            dictionaryOfCoins.Add(CoinName.Dimes.ToString(), CoinValue.Dimes);
+            dictionaryOfCoins.Add(CoinName.Nickels.ToString(), CoinValue.Nickels);
 
 
             // Adding Product to DictionaryofCoins
-            dictionaryOfProduct.Add("1", ProductPriceChart.Cola);
-            dictionaryOfProduct.Add("2", ProductPriceChart.Chips);
-            dictionaryOfProduct.Add("3", ProductPriceChart.Candy);
+            dictionaryOfProduct.Add(ProductName.Cola.ToString(), ProductPriceChart.Cola);
+            dictionaryOfProduct.Add(ProductName.Chips.ToString(), ProductPriceChart.Chips);
+            dictionaryOfProduct.Add(ProductName.Candy.ToString(), ProductPriceChart.Candy);
         }
 
     }

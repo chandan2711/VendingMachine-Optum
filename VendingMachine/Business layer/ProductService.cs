@@ -1,26 +1,28 @@
 ﻿using VendingMachine.BL.Interfaces;
 using VendingMachine.Common;
+using VendingMachine.Common.Enum;
 
 namespace VendingMachine.BL
 {
 
     public class ProductService : IProductService
     {
+        private readonly ICoinService _coinService;
         private readonly Helper _helper;
 
-        public ProductService(Helper helperBL)
+        public ProductService(Helper helperBL, ICoinService coinService)
         {
             this._helper = helperBL;
-            
+            this._coinService = coinService;
+
         }
 
-        public double ProductPurchase(double sumOfCoins, string enteredOption)
+        public double ProductPurchase(List<CoinName> listOfCoins, string productName)
         {
-
-            if (_helper.dictionaryOfProduct.ContainsKey(enteredOption))
+            var sumOfCoins = _coinService.GetSumOfCoins(listOfCoins);
+            if (_helper.dictionaryOfProduct.ContainsKey(productName))
             {
-                var productName = GetProductName(enteredOption);
-                var productPrice = _helper.dictionaryOfProduct[enteredOption];
+                var productPrice = _helper.dictionaryOfProduct[productName];
                 if (sumOfCoins >= productPrice)
                 {
 
@@ -30,7 +32,7 @@ namespace VendingMachine.BL
                 }
                 else
                 {
-                    PurchaseFailure(sumOfCoins,productName.ToString(), productPrice);
+                    PurchaseFailure(sumOfCoins, productName.ToString(), productPrice);
                 }
 
             }
@@ -52,11 +54,11 @@ namespace VendingMachine.BL
             Console.WriteLine("Product {0} Dispensed", productName);
             Console.WriteLine("THANK YOU");
         }
-        private void PurchaseFailure(double sumOfCoins,string productName,double productPrice)                         
+        private void PurchaseFailure(double sumOfCoins, string productName, double productPrice)
         {
             Console.WriteLine("Not Sufficient Balance in your Account ");
             Console.WriteLine("Availabl Amount : " + sumOfCoins + "$");
-            Console.WriteLine("Price of {0} is {1}$", productName, productPrice               );
+            Console.WriteLine("Price of {0} is {1}$", productName, productPrice);
         }
 
     }

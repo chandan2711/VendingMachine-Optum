@@ -1,4 +1,5 @@
 ﻿using VendingMachine.BL.Interfaces;
+using VendingMachine.Common.Enum;
 
 namespace VendingMachine.BL
 {
@@ -11,19 +12,29 @@ namespace VendingMachine.BL
         }
 
 
-        public double GetCoinValue(string enterdOptionForCoins)
+        public bool ValidCoinChecking(string coinName)
         {
-            if (_helper.dictionaryOfCoins.ContainsKey(enterdOptionForCoins))
+            if (_helper.dictionaryOfCoins.ContainsKey(coinName))
             {
-                return _helper.dictionaryOfCoins[enterdOptionForCoins];
+                return true; ;
 
             }
             else
             {
                 // Any Other Option Except(1,2,3) will consider as Pennies(0.01)
                 Console.WriteLine("Invalid Coin");
-                return 0.0;
+                return false;
             }
+        }
+
+        public double GetSumOfCoins(List<CoinName> listOfCoinNames)
+        {
+            var sumOfCoins = 0.0;
+            foreach (var coinName in listOfCoinNames)
+            {
+                sumOfCoins = sumOfCoins + _helper.dictionaryOfCoins[coinName.ToString()];
+            }
+            return sumOfCoins;
         }
 
     }

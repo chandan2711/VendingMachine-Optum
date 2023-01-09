@@ -1,14 +1,15 @@
 ﻿using VendingMachine.BL;
 using Microsoft.Extensions.DependencyInjection;
 using VendingMachine.BL.Interfaces;
+using VendingMachine.Common;
+using VendingMachine.Common.Enum;
 
-
-var sumOfCoins = 0.0;
 var Exit = true;
+var listOfCoins = new List<CoinName>();
 var collection = new ServiceCollection();
-collection.AddSingleton<IProductService, ProductService>();
 collection.AddSingleton<ICoinService, CoinService>();
 collection.AddSingleton<Helper>();
+collection.AddSingleton<IProductService, ProductService>();
 var provider = collection.BuildServiceProvider();
 
 try
@@ -27,22 +28,28 @@ try
             switch (enteredResponse)
             {
                 case "1":
-                    Console.WriteLine("Press 1 For Nickels(0.05).....Press 2 for Dimes(0.1).....Press 3 for Quarters(0.25)");
+                    Console.WriteLine("Press 1 For Quarters(0.25).....Press 2 for Dimes(0.1).....Press 3 for Nickels(0.05)");
                     var optionChoosedForCoins = Console.ReadLine();
-                    var coinValue = coinServiceBL.GetCoinValue(optionChoosedForCoins ?? "1");
-                    
-                    sumOfCoins = sumOfCoins + coinValue;
-                    Console.WriteLine("Total Amount : {0}", sumOfCoins);
+                    var coinName = (CoinName)Convert.ToInt32(optionChoosedForCoins);
+                    var isCoinValid = coinServiceBL.ValidCoinChecking(coinName.ToString());
+                    if (isCoinValid)
+                    {
+                        listOfCoins.Add(coinName);
+                    }
+                    var totalAmount = coinServiceBL.GetSumOfCoins(listOfCoins);
+                    Console.WriteLine("Total Amount : {0}", totalAmount);
                     break;
                 case "2":
                     Console.WriteLine("Available Products : ");
                     Console.WriteLine("'Cola - 1.00' 'Chips - 0.50' 'Candy : 0.65'");
                     Console.WriteLine("For Cola Press '1'...For Chips press '2'...For Candy Press'3'");
                     var OptionChoosedForProduct = Console.ReadLine();
-                    sumOfCoins = productServiceBL.ProductPurchase(sumOfCoins, OptionChoosedForProduct ?? "1");
+                    var productName = (ProductName)Convert.ToInt32(OptionChoosedForProduct);
+                    var returnAmount = productServiceBL.ProductPurchase(listOfCoins, productName.ToString());
+                    Console.WriteLine("COLLECT YOUR AMOUNT : {0}", Convert.ToDecimal(returnAmount));
+                    listOfCoins.Clear();
                     break;
                 case "3":
-                    Console.WriteLine("Collect Your Amount : {0}", Convert.ToDecimal(sumOfCoins));
                     Console.WriteLine("Thank You for using Vending Machine");
                     Exit = false;
                     break;
